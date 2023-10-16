@@ -1,6 +1,7 @@
 ﻿using H1_Extra_Football_club.Model;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,9 +36,12 @@ namespace H1_Extra_Football_club.Controller
 						ShowAll();
 						break;
 					case 2:
-						AddMember();
+						SearchMember();
 						break;
 					case 3:
+						AddMember();
+						break;
+					case 4:
 						RemoveMember();
 						break;
 				}
@@ -53,7 +57,7 @@ namespace H1_Extra_Football_club.Controller
 		/// </summary>
 		private void MainMenu()
 		{
-			string[] menu = { "Football Admin site", "1.\tSee all members", "2.\tAdd member", "3.\tRemove member", };
+			string[] menu = { "Football Admin site", "1.\tSee all members", "2.\tSearch member","3.\tAdd member", "4.\tRemove member", };
 
 			for (byte i = 0; i < menu.Length; i++)
 			{
@@ -92,6 +96,37 @@ namespace H1_Extra_Football_club.Controller
 			{
 				Member member = database.members[i];
 				view.Message($"MemberNumber: {i}, Name: {member.Name}, Phone: {member.Phone}");
+			}
+
+			view.Message("Press enter to continue");
+			view.ReadLine();
+		}
+
+		/// <summary>
+		/// The purpose of this method is to search for a specific member and then output information about the member.
+		/// First the user writes the id of the member they wanna look at.
+		/// If the id cant be converted to int, then an exception is caught by the try-catch, saying the id is invalid.
+		/// If nobody has the id, then another exception is caught by try-catch, saying that the member doesn't exist.
+		/// However if no issues occur, then all the information about the member gets displayed in the console.
+		/// </summary>
+		private void SearchMember()
+		{
+			view.Message("Write the ID of the member you want to search for.");
+			
+			try
+			{
+				int id = int.Parse(view.ReadLine());
+
+				Member member = database.members[id];
+				view.Message($"MemberNumber: {id}, Name: {member.Name}, Phone: {member.Phone}");
+			}
+			catch (ArgumentOutOfRangeException)
+			{
+				view.Message("Member does not exist!");
+			}
+			catch (FormatException)
+			{
+				view.Message("Invalid ID, write numbers only!");
 			}
 
 			view.Message("Press enter to continue");
